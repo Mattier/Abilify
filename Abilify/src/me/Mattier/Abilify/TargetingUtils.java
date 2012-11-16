@@ -19,17 +19,6 @@
  */
 package me.Mattier.Abilify;
 
-import org.spout.api.Spout;
+public class TargetingUtils {
 
-import me.Mattier.Abilify.mechanic.Mechanic;
-
-public class Abilify {
-	@SuppressWarnings("unused")
-	private static final AbilifyPlugin plugin = (AbilifyPlugin) Spout.getPluginManager().getPlugin("Abilify");
-	
-	public Abilify() {}
-
-	public static boolean register(Class<? extends Mechanic> mechanic) {
-		return true;
-	}
 }

@@ -17,19 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package me.Mattier.Abilify;
+package me.Mattier.Abilify.mechanic;
 
-import org.spout.api.Spout;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import me.Mattier.Abilify.mechanic.Mechanic;
-
-public class Abilify {
-	@SuppressWarnings("unused")
-	private static final AbilifyPlugin plugin = (AbilifyPlugin) Spout.getPluginManager().getPlugin("Abilify");
-	
-	public Abilify() {}
-
-	public static boolean register(Class<? extends Mechanic> mechanic) {
-		return true;
-	}
+/**
+* An annotation to hold pack information about a Mechanic
+*/
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PackData {
+	String name() default "???";
+	String author() default "???";
+	String pack() default "???";
 }

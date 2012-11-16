@@ -17,23 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package me.Mattier.Abilify;
 
-package me.Mattier.Abilify.mechanic;
+import java.util.logging.Logger;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.spout.api.UnsafeMethod;
+import org.spout.api.plugin.CommonPlugin;
 
-/**
-* An annotation to hold mechanical information about a Mechanic
-*/
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface MechanicData {
-	MechanicType type();
-	int[] mod();
+public class AbilifyPlugin extends CommonPlugin {
+	private static Logger logger;
+	
+	@Override
+	@UnsafeMethod
+	public void onDisable() {
+		info("Abilify: Disabled!");
+	}
+
+	@Override
+	@UnsafeMethod
+	public void onEnable() {
+		logger = getLogger();
+		
+		info("Abilify: Enabled!");
+		
+		//Spout.getPluginManager().loadPlugins(File arg0);
+	}
+	
+	@Override @UnsafeMethod public void onLoad() {}
+	@Override @UnsafeMethod public void onReload() {}
+	
+	
+	
+/* Logger */
+	public static void info(String s) {logger.info(s);}
+	public static void warning(String s) {logger.warning(s);}
+	public static void severe(String s) {logger.severe(s);}
+
 }
-
-
-
