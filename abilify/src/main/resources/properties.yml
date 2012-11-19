@@ -1,0 +1,8 @@
+name: ${project.name}
+version: ${releaseVersion} b${buildNumber}
+description: ${project.description}
+author: ${project.developers.developer.name}
+website: ${project.url}
+
+main: ${mainClass}
+platform: SERVER
