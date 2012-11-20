@@ -22,7 +22,7 @@ public class AbilifyDatabase {
 	
 	public void onEnable() {
 		H2Configuration h2 = new H2Configuration();
-		File h2db = new File(dbloc, "abilify_db");
+		File h2db = new File(dbloc, "database");
 		h2.setDatabase(h2db.getAbsolutePath());
 		db = DatabaseFactory.createNewDatabase(h2);
 		

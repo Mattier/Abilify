@@ -1,6 +1,7 @@
 package me.Mattier.Abilify.database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import me.Mattier.Abilify.AbilifyPlugin;
 import me.Mattier.Abilify.mechanic.Mechanic;
@@ -18,18 +19,18 @@ import com.alta189.simplesave.Database;
 
 public class DatabaseUtil {
 	
-	public static ArrayList<Ability> loadAbilitiesFrom(Database db) {
-		ArrayList<Ability> a = new ArrayList<Ability>();
+	public static HashMap<Integer, Ability> loadAbilitiesFrom(Database db) {
+		HashMap<Integer, Ability> a = new HashMap<Integer, Ability>();
 		for (AbilityTable t : db.select(AbilityTable.class).execute().find()) {
-			a.add(tableToWrapper(t));
+			a.put(t.getId(), tableToWrapper(t));
 		}
 		return a;
 	}
 	
-	public static ArrayList<Status> loadStatusesFrom(Database db) {
-		ArrayList<Status> s = new ArrayList<Status>();
+	public static HashMap<Integer, Status> loadStatusesFrom(Database db) {
+		HashMap<Integer, Status> s = new HashMap<Integer, Status>();
 		for (StatusTable t : db.select(StatusTable.class).execute().find()) {
-			s.add(tableToWrapper(t));
+			s.put(t.getId(), tableToWrapper(t));
 		}
 		return s;
 	}

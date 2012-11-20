@@ -32,26 +32,33 @@ public class AbilifyPlugin extends CommonPlugin {
 	
 	@Override @UnsafeMethod 
 	public void onReload() {
-		MANAGER.onDisable();
 		if (!loadConfig())
 			return;
-		MANAGER.onEnable();
+		MANAGER.onReload();
 		info("Reloaded!");
 	}
 	
 	@Override @UnsafeMethod 
 	public void onLoad() {
 		CONFIG = new AbilifyConfig(getDataFolder());
-		MANAGER = new AbilifyManager(this);
+		MANAGER = new AbilifyManager(getDataFolder());
 	}
 	
 /* Other methods */
-	public static AbilifyConfig getConfig() {
-		return CONFIG;
+	/**
+	 * @return The {@link MechanicManager}, which is responsible for the
+	 * handling of all {@link me.Mattier.Abilify.mechanic.Mechanic Mechanics}.
+	 */
+	public static MechanicManager getManager() {
+		return MANAGER;
 	}
 	
-	public static AbilifyManager getManager() {
-		return MANAGER;
+	/**
+	 * @return The {@link me.Mattier.Abilify.configuration.AbilifyConfig config}
+	 * for this plugin.
+	 */
+	public static AbilifyConfig getConfig() {
+		return CONFIG;
 	}
 	
 	private boolean loadConfig() {

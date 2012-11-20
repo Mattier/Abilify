@@ -16,15 +16,22 @@ public class AbilifyComponent extends EntityComponent {
 	}
 	
 	@Override
+	public void onDetached() {
+		Entity holder = getOwner();
+		holder.detach(AbilityComponent.class);
+		holder.detach(StatusComponent.class);
+	}
+	
+	@Override
 	public boolean canTick() {
 		return false;
 	}
 	
-	public AbilityComponent getAbility() {
+	public AbilityComponent getAbilityComponent() {
 		return getOwner().get(AbilityComponent.class);
 	}
 	
-	public StatusComponent getStatus() {
+	public StatusComponent getStatusComponent() {
 		return getOwner().get(StatusComponent.class);
 	}
 }

@@ -2,6 +2,8 @@ package me.Mattier.Abilify.component;
 
 import java.util.HashMap;
 
+import me.Mattier.Abilify.AbilifyPlugin;
+import me.Mattier.Abilify.database.AbilifyDatabase;
 import me.Mattier.Abilify.wrappers.status.Status;
 
 import org.spout.api.component.components.EntityComponent;
@@ -10,11 +12,17 @@ import org.spout.api.component.components.EntityComponent;
  * Component that controls the Abilify statuses for entities.
  */
 public class StatusComponent extends EntityComponent {
-	private HashMap<Status, Integer> statuses;
+	private int count = 0;
+	private HashMap<Integer, Integer> statuses;
 	
 	@Override
 	public void onAttached() {
-		this.statuses = new HashMap<Status, Integer>();
+		this.statuses = new HashMap<Integer, Integer>();
+	}
+	
+	@Override
+	public void onDetached() {
+		getData().remove("ABILIFY_STATUS");
 	}
 	
 	@Override
@@ -24,25 +32,29 @@ public class StatusComponent extends EntityComponent {
 	
 	@Override
 	public void onTick(float dt) {
-		int count;
-		for (Status s : statuses.keySet()) {
-			count = statuses.get(s);
-			if (count == -1) {
+		Status s;
+		int d;
+		for (int i : statuses.keySet()) {
+			s = AbilifyPlugin.getManager().getStatus(i);
+			d = statuses.get(i);
+			if (d == -1  && count == 9) {
 				useStatus(s);
-			} else if(count % s.getTickRate() == 1) {
-				useStatus(s);
-				statuses.put(s, count--);
-			} else if(count % s.getTickRate() == 0) {
-				useStatus(s);
+			} else if(d == 0) {
 				removeStatus(s);
+			} else if(d % s.getTickRate() == 0) {
+				useStatus(s);
+				statuses.put(i, d--);
 			} else {
-				statuses.put(s, count--);
+				statuses.put(i, d--);
 			}
 		}
+		count++;
+		if (count == 10)
+			count = 0;
 	}
 	
 	public boolean addStatus(Status s) {
-		if (statuses.put(s, s.getDuration()) == null)
+		if (statuses.put(s.getId(), s.getDuration()) == null)
 			return false;
 		return true;
 	}
@@ -64,5 +76,14 @@ public class StatusComponent extends EntityComponent {
 			s.tick(this.getOwner());
 			return true;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void load() {
+		statuses = (HashMap<Integer, Integer>) getData().get("ABILIFY_STATUS");
+	}
+
+	public void save(AbilifyDatabase database) {
+		getData().put("ABILIFY_STATUS", statuses);
 	}
 }
