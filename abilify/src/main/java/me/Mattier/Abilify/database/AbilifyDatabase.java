@@ -29,7 +29,6 @@ public class AbilifyDatabase {
 		try {
 			db.registerTable(AbilityTable.class);
 			db.registerTable(StatusTable.class);
-			db.registerTable(PlayerTable.class);
 		} catch (TableRegistrationException e) {
 			e.printStackTrace();
 		}

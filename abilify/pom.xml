@@ -68,12 +68,6 @@
 	<!-- Dependencies -->
 	<dependencies>
 		<dependency>
-			<groupId>org.getspout</groupId>
-			<artifactId>spoutplugin</artifactId>
-			<version>${spoutpluginVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.spout</groupId>
 			<artifactId>spoutapi</artifactId>
 			<version>${spoutVersion}</version>

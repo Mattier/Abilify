@@ -9,7 +9,7 @@ import org.spout.api.entity.Entity;
  * The {@link MechanicWrapper} for a Status. Contains status
  * specific information in addition the the basic mechanic information.
  */
-public interface Status extends WrapperInterface{
+public interface Status extends WrapperInterface {
 	/**
 	 * @return The duration that this status ticks for, before being removed.
 	 */
@@ -31,12 +31,12 @@ public interface Status extends WrapperInterface{
 	public void setTickRate(int rate);
 	
 	/**
-	 * When called, causes the status to tick.
+	 * Currently only used with triggered statuses. This checks if the mechanic will trigger.
+	 * In the case that this returns true, the {@link #main} method will be called, and the 
+	 * status will be removed from its owner.
 	 * 
-	 * @param owner The owner of this status, who will be affected by it.
-	 * @return An array of any entities targeted by this status (ie. if the status
-	 * causes a ticking aoe around the owner, whoever will be hit), or null if 
-	 * the status has no targets.
+	 * @param owner The entity which owns this mechanic, ie. the individual affected by a status mechanic.
+	 * @return Whether or not the status will trigger.
 	 */
-	public Entity[] tick(Entity owner);
+	public boolean check(Entity owner);
 }

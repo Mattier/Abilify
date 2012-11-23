@@ -1,21 +1,24 @@
 package me.Mattier.Abilify.component;
 
 import java.util.HashSet;
+import java.util.UUID;
 
-import me.Mattier.Abilify.database.AbilifyDatabase;
+import me.Mattier.Abilify.Abilify;
+import me.Mattier.Abilify.event.AbilityEvent;
 import me.Mattier.Abilify.wrappers.ability.Ability;
 
 import org.spout.api.component.components.EntityComponent;
+import org.spout.api.entity.Entity;
 
 /**
  * Component that controls the Abilify abilities for entities.
  */
 public class AbilityComponent extends EntityComponent {
-	private HashSet<Integer> abilities;
+	private HashSet<UUID> abilities;
 	
 	@Override
 	public void onAttached() {
-		this.abilities = new HashSet<Integer>();
+		this.abilities = new HashSet<UUID>();
 	}
 	
 	@Override
@@ -28,33 +31,62 @@ public class AbilityComponent extends EntityComponent {
 		return false;
 	}
 	
-	public boolean addAbility(Ability a) {
-		return abilities.add(a.getId());
+	public boolean addAbility(Ability ability) {
+		return addAbility(ability.getId());
 	}
 	
-	public boolean removeAbility(Ability a) {
-		return abilities.remove(a.getId());
+	public boolean addAbility(UUID id) {
+		boolean b = abilities.add(id);
+		save();
+		return b;
+	}
+	
+	public boolean removeAbility(Ability ability) {
+		return removeAbility(ability.getId());
+	}
+	
+	public boolean removeAbility(UUID id) {
+		boolean b = abilities.remove(id);
+		save();
+		return b;
 	}
 	
 	public boolean hasAbility(Ability a) {
-		return abilities.contains(a.getId());
+		return hasAbility(a.getId());
+	}
+	
+	public boolean hasAbility(UUID id) {
+		return abilities.contains(id);
 	}
 	
 	public boolean useAbility(Ability a) {
-		if (!hasAbility(a))
+		return useAbility(a.getId());
+	}
+	
+	public boolean useAbility(UUID id) {
+		if (!hasAbility(id))
 			return false;
 		else {
-			a.use(this.getOwner());
+			Ability a = Abilify.getManager().getAbility(id);
+			Entity e = this.getOwner();
+			AbilityEvent event = new AbilityEvent(a, e);
+			if (event.isCancelled())
+				return false;
+			a.main(this.getOwner());
 			return true;
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void load() {
-		abilities = (HashSet<Integer>) getData().get("ABILIFY_ABILITY");
+		abilities = (HashSet<UUID>) getData().get("ABILIFY_ABILITY");
+		for (UUID i : abilities) {
+			if (!Abilify.getManager().hasAbility(i))
+				removeAbility(i);
+		}
 	}
 
-	public void save(AbilifyDatabase database) {
+	public void save() {
 		getData().put("ABILIFY_ABILITY", abilities);
 	}
 }

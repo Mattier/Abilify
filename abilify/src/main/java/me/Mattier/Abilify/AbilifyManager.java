@@ -3,6 +3,7 @@ package me.Mattier.Abilify;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import me.Mattier.Abilify.component.AbilifyComponent;
 import me.Mattier.Abilify.database.AbilifyDatabase;
@@ -24,15 +25,15 @@ public class AbilifyManager implements MechanicManager {
 	private final File packloc;
 	private final AbilifyDatabase database;
 	private final ArrayList<Mechanic> mechanics;
-	private final HashMap<Integer, Ability> abilities;
-	private final HashMap<Integer, Status> statuses;
+	private final HashMap<UUID, Ability> abilities;
+	private final HashMap<UUID, Status> statuses;
 	
 	public AbilifyManager(File file) {
 		this.packloc = new File(file + File.separator + "packs");
 		this.database = new AbilifyDatabase(new File(file + File.separator + "db"));
 		this.mechanics = new ArrayList<Mechanic>();
-		this.abilities = new HashMap<Integer, Ability>();
-		this.statuses = new HashMap<Integer, Status>();
+		this.abilities = new HashMap<UUID, Ability>();
+		this.statuses = new HashMap<UUID, Status>();
 	}
 	
 	/**
@@ -41,11 +42,11 @@ public class AbilifyManager implements MechanicManager {
 	 * players skills/statuses.
 	 */
 	public void onEnable() {
-		AbilifyPlugin.info("Starting Mechanic Manager...");
+		Abilify.info("Starting Mechanic Manager...");
 		database.onEnable();
 		loadMechanics();
 		loadWrappers();
-		AbilifyPlugin.info("...Mechanic Manager started!");
+		Abilify.info("...Mechanic Manager started!");
 	}
 
 	/**
@@ -53,12 +54,12 @@ public class AbilifyManager implements MechanicManager {
 	 * wrapped mechanics.
 	 */
 	public void onDisable() {
-		AbilifyPlugin.info("Stopping Mechanic Manager...");
+		Abilify.info("Stopping Mechanic Manager...");
 		abilities.clear();
 		statuses.clear();
 		mechanics.clear();
 		database.onDisable();
-		AbilifyPlugin.info("...Mechanic Manager stopped!");
+		Abilify.info("...Mechanic Manager stopped!");
 	}
 	
 	/**
@@ -91,57 +92,40 @@ public class AbilifyManager implements MechanicManager {
 	}
 	
 /* Attaching/Detaching of Abilify Components. */
-	/**
-	 * Attach abilify components to the selected entities.
-	 */
+	@Override
 	public void abilifyEntities(Entity[] entities) {
 		for (Entity e : entities)
 			e.add(AbilifyComponent.class);
 	}
 	
-	/**
-	 * Attach abilify components to the selected entity.
-	 */
+	@Override
 	public void abilifyEntity(Entity e) {
 		e.add(AbilifyComponent.class);
 	}
 	
-	/**
-	 * Detach abilify components to the selected entities.
-	 */
+	@Override
 	public void debilifyEntities(Entity[] entities) {
 		for (Entity e : entities)
 			e.detach(AbilifyComponent.class);
 	}
 	
-	/**
-	 * Detatch abilify components from the selected entity.
-	 */
+	@Override
 	public void debilifyEntity(Entity e) {
 		e.detach(AbilifyComponent.class);
 	}
 	
 /* Mechanic Methods. */
-	/**
-	 * As a pack is loaded, this is used to initiate and register any
-	 * {@link Mechanic mechanics} that it contains.
-	 * 
-	 * @param mechanic The mechanic class to register with the manager.
-	 */
+	@Override
 	public void register(Class<? extends Mechanic> mechanic) {
 		try {
 			mechanics.add(mechanic.newInstance());
 		} catch (Exception e) {
-			AbilifyPlugin.warning("Error loading " + mechanic.getAnnotation(PackageData.class).name() 
+			Abilify.warning("Error loading " + mechanic.getAnnotation(PackageData.class).name() 
 					+ " Mechanic, in Pack " + mechanic.getAnnotation(PackageData.class).pack() + ".");
 		}
 	}
 	
-	/**
-	 * @param name The class name for a {@link Mechanic Mechanic}, as returned by
-	 * {@link Class#getName()}. 
-	 * @return The loaded mechanic.
-	 */
+	@Override
 	public Mechanic getMechanic(String name) {
 		try {
 			return mechanics.get(mechanics.indexOf(Class.forName(name)));
@@ -151,18 +135,12 @@ public class AbilifyManager implements MechanicManager {
 		}
 	}
 	
-	/**
-	 * @return An ArrayList of all of the loaded mechanics.
-	 */
+	@Override
 	public ArrayList<Mechanic> getMechanics() {
 		return mechanics;
 	}
 	
-	/**
-	 * @param name The class name for a mechanic, as returned by
-	 * {@link Class#getName()}.
-	 * @return true If the specified mechanic has been loaded by the manager.
-	 */
+	@Override
 	public boolean hasMechanic(String name) {
 		try {
 			return mechanics.contains(Class.forName(name));
@@ -173,69 +151,53 @@ public class AbilifyManager implements MechanicManager {
 	}
 
 /* Mechanic Wrapper Methods. */
-	/**
-	 * Registers an {@link Ability} with the manager.
-	 * 
-	 * @param ability The ability to register.
-	 * @return true (as specified by {@link ArrayList#add})
-	 */
+	@Override
 	public boolean registerAbility(Ability ability) {
 		return abilities.put(ability.getId(), ability) == null ? false : true;
 	}
 	
-	/**
-	 * Registers an {@link Status} with the manager.
-	 * 
-	 * @param ability The ability to register.
-	 * @return true (as specified by {@link ArrayList#add})
-	 */
+	@Override
 	public boolean registerStatus(Status status) {
 		return statuses.put(status.getId(), status) == null ? false : true;
 	}
 	
-	/**
-	 * @return An {@link ArrayList} of all of the registered {@link Ability abilities},
-	 * and their associated IDs.
-	 */
-	public HashMap<Integer, Ability> getAbilities() {
+	@Override
+	public HashMap<UUID, Ability> getAbilities() {
 		return abilities;
 	}
 	
-	/**
-	 * @param id
-	 * @return The {@link Ability} with the associated ID.
-	 */
-	public Ability getAbility(int id) {
-		return abilities.get(id);
-	}
-	
-	/**
-	 * @return An {@link ArrayList} of all of the registered {@link Status statuses},
-	 * and their associated IDs.
-	 */
-	public HashMap<Integer, Status> getStatuses() {
+	@Override
+	public HashMap<UUID, Status> getStatuses() {
 		return statuses;
 	}
 	
-	/**
-	 * @param id
-	 * @return The {@link Status} with the associated ID.
-	 */
-	public Status getStatus(int id) {
+	@Override
+	public Ability getAbility(UUID id) {
+		return abilities.get(id);
+	}
+	
+	@Override
+	public Status getStatus(UUID id) {
 		return statuses.get(id);
 	}
 	
-	/**
-	 * @return true if the specified ability is registered with the manager.
-	 */
+	@Override
 	public boolean hasAbility(Ability ability) {
-		return abilities.containsKey(ability.getId());
+		return hasAbility(ability.getId());
 	}
 	
-	/**
-	 * @return true if the specified status is registered with the manager.
-	 */
+	@Override
+	public boolean hasAbility(UUID id) {
+		return abilities.containsKey(id);
+	}
+	
+	@Override
 	public boolean hasStatus(Status status) {
-		return statuses.containsKey(status.getId());
+		return hasStatus(status.getId());
+	}
+	
+	@Override
+	public boolean hasStatus(UUID id) {
+		return statuses.containsKey(id);
 	}
 }

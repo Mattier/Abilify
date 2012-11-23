@@ -1,5 +1,8 @@
 package me.Mattier.Abilify.mechanic;
 
+import me.Mattier.Abilify.event.AbilifyDamageEvent;
+
+import org.spout.api.Spout;
 import org.spout.api.entity.Entity;
 
 /**
@@ -10,10 +13,17 @@ import org.spout.api.entity.Entity;
 public abstract class Mechanic {
 /* Mechanic Data */
 	/**
-	 * @return The {@link MechanicType} of this mechanic.
+	 * @return The {@link Type} of this mechanic.
 	 */
-	public MechanicType getType() {
+	public Type getType() {
 		return this.getClass().getAnnotation(MechanicData.class).type();
+	}
+	
+	/**
+	 * @return The {@link SubType} of this mechanic.
+	 */
+	public SubType getSubType() {
+		return this.getClass().getAnnotation(MechanicData.class).subtype();
 	}
 	
 	/**
@@ -45,17 +55,20 @@ public abstract class Mechanic {
 		return this.getClass().getAnnotation(PackageData.class).pack();
 	}
 	
-/* Main Method */
+/* Other Methods */
 	/**
-	 * The core of a mechanic. When an ability is used, or a status ticks, this is what it does.
+	 * Basic Mechanic main() method. When an ability is used, or a status ticks, this is what it does.
 	 * 
 	 * @param owner The entity which owns this mechanic, ie. the caster of an ability mechanic, 
 	 * or the individual affected by a status mechanic.
 	 * @param modifier The modifier array for this mechanic, these values are used by a server
 	 * admin to customize a mechanic.
+	 * @param args Variable arguments depending on the abilities subtypes.
 	 * @return The targets of a mechanic, or null if this mechanic is untargeted.
 	 */
-	public abstract Entity[] main(Entity owner, int[] modifier);
+	public Entity[] main(Entity owner, int[] modifier, Object... args) {
+		return null;
+	}
 	
 	/**
 	 * Currently only used with triggered statuses. This checks if the mechanic will trigger, 
@@ -66,7 +79,36 @@ public abstract class Mechanic {
 	 * @return Whether or not the status will trigger.
 	 */
 	public boolean check(Entity owner) {
-		return true;
+		return false;
 	}
 	
+	/**
+	 * Used to call an {@link me.Mattier.Abilify.event.AbilifyDamageEvent AbilifyDamageEvent}, which 
+	 * will later be handled by the specified {@link me.Mattier.Abilify.DamageHandler DamageHandler}.
+	 * 
+	 * As an example, after this event is called on a server where a Vanilla damage handler has
+	 * been specified, the handler will turn this into a VanillaDamageEvent.
+	 * 
+	 * @param damage The amount of damage to be applied.
+	 * @param target The entity being damaged.
+	 */
+	public void damage(int damage, Entity target) {
+		damage(damage, target, null);
+	}
+	
+	/**
+	 * Used to call an {@link me.Mattier.Abilify.event.AbilifyDamageEvent AbilifyDamageEvent}, which 
+	 * will later be handled by the specified {@link me.Mattier.Abilify.DamageHandler DamageHandler}.
+	 * 
+	 * As an example, after this event is called on a server where a Vanilla damage handler has
+	 * been specified, the handler will turn this into a VanillaDamageEvent.
+	 * 
+	 * @param damage The amount of damage to be applied.
+	 * @param target The entity being damaged.
+	 * @param source The entity which is the source of the damage.
+	 */
+	public void damage(int damage, Entity target, Entity source) {
+		AbilifyDamageEvent event = new AbilifyDamageEvent(damage, target, source);
+		Spout.getEventManager().callEvent(event);
+	}
 }

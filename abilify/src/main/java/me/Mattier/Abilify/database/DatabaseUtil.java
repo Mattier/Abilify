@@ -2,35 +2,31 @@ package me.Mattier.Abilify.database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
-import me.Mattier.Abilify.AbilifyPlugin;
+import me.Mattier.Abilify.Abilify;
 import me.Mattier.Abilify.mechanic.Mechanic;
-import me.Mattier.Abilify.mechanic.MechanicType;
 import me.Mattier.Abilify.wrappers.ability.Ability;
 import me.Mattier.Abilify.wrappers.ability.AbilityWrapper;
-import me.Mattier.Abilify.wrappers.ability.Targeted;
-import me.Mattier.Abilify.wrappers.ability.Untargeted;
 import me.Mattier.Abilify.wrappers.status.Status;
 import me.Mattier.Abilify.wrappers.status.StatusWrapper;
-import me.Mattier.Abilify.wrappers.status.Ticking;
-import me.Mattier.Abilify.wrappers.status.Triggered;
 
 import com.alta189.simplesave.Database;
 
 public class DatabaseUtil {
 	
-	public static HashMap<Integer, Ability> loadAbilitiesFrom(Database db) {
-		HashMap<Integer, Ability> a = new HashMap<Integer, Ability>();
+	public static HashMap<UUID, Ability> loadAbilitiesFrom(Database db) {
+		HashMap<UUID, Ability> a = new HashMap<UUID, Ability>();
 		for (AbilityTable t : db.select(AbilityTable.class).execute().find()) {
-			a.put(t.getId(), tableToWrapper(t));
+			a.put(t.getUUID(), tableToWrapper(t));
 		}
 		return a;
 	}
 	
-	public static HashMap<Integer, Status> loadStatusesFrom(Database db) {
-		HashMap<Integer, Status> s = new HashMap<Integer, Status>();
+	public static HashMap<UUID, Status> loadStatusesFrom(Database db) {
+		HashMap<UUID, Status> s = new HashMap<UUID, Status>();
 		for (StatusTable t : db.select(StatusTable.class).execute().find()) {
-			s.put(t.getId(), tableToWrapper(t));
+			s.put(t.getUUID(), tableToWrapper(t));
 		}
 		return s;
 	}
@@ -49,13 +45,8 @@ public class DatabaseUtil {
 	
 	public static Ability tableToWrapper(AbilityTable a) {
 		AbilityWrapper wrapper;
-		Mechanic m = AbilifyPlugin.getManager().getMechanic(a.getMech());
-		
-		if (m.getType() == MechanicType.TARGETED)
-			wrapper = new Targeted(a.getId(), m);
-		else
-			wrapper = new Untargeted(a.getId(), m);
-		
+		Mechanic m = Abilify.getManager().getMechanic(a.getMech());
+		wrapper = new AbilityWrapper(a.getUUID(), m);
 		wrapper.setModifier(a.getMod());
 		wrapper.setName(a.getName());
 		wrapper.setDescription(a.getDesc());
@@ -65,13 +56,8 @@ public class DatabaseUtil {
 	
 	public static Status tableToWrapper(StatusTable s) {
 		StatusWrapper wrapper;
-		Mechanic m = AbilifyPlugin.getManager().getMechanic(s.getMech());
-		
-		if (m.getType() == MechanicType.TICKING)
-			wrapper = new Ticking(s.getId(), m);	
-		else
-			wrapper = new Triggered(s.getId(), m);
-		
+		Mechanic m = Abilify.getManager().getMechanic(s.getMech());
+		wrapper = new StatusWrapper(s.getUUID(), m);
 		wrapper.setModifier(s.getMod());
 		wrapper.setName(s.getName());
 		wrapper.setDescription(s.getDesc());
@@ -82,7 +68,7 @@ public class DatabaseUtil {
 	
 	public static AbilityTable wrapperToTable(Ability a) {
 		AbilityTable table = new AbilityTable();
-		table.setId(a.getId());
+		table.setUUID(a.getId());
 		table.setMech(a.getMechanic().getClass().getName());
 		table.setMod(a.getModifier());
 		table.setName(a.getName());
@@ -93,7 +79,7 @@ public class DatabaseUtil {
 	
 	public static StatusTable wrapperToTable(Status s) {
 		StatusTable table = new StatusTable();
-		table.setId(s.getId());
+		table.setUUID(s.getId());
 		table.setMech(s.getMechanic().getClass().getName());
 		table.setMod(s.getModifier());
 		table.setName(s.getName());

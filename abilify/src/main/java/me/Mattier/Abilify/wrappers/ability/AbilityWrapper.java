@@ -1,15 +1,12 @@
 package me.Mattier.Abilify.wrappers.ability;
 
-import org.spout.api.entity.Entity;
+import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Mechanic;
 import me.Mattier.Abilify.wrappers.MechanicWrapper;
 
-public abstract class AbilityWrapper extends MechanicWrapper implements Ability {
-	public AbilityWrapper(int id, Mechanic m) {
+public class AbilityWrapper extends MechanicWrapper implements Ability {
+	public AbilityWrapper(UUID id, Mechanic m) {
 		super(id, m);
 	}
-	
-	public abstract Entity[] use(Entity owner);
-
 }

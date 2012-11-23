@@ -1,23 +1,25 @@
 package me.Mattier.Abilify.component;
 
 import java.util.HashMap;
+import java.util.UUID;
 
-import me.Mattier.Abilify.AbilifyPlugin;
-import me.Mattier.Abilify.database.AbilifyDatabase;
+import me.Mattier.Abilify.Abilify;
+import me.Mattier.Abilify.event.StatusEvent;
 import me.Mattier.Abilify.wrappers.status.Status;
 
 import org.spout.api.component.components.EntityComponent;
+import org.spout.api.entity.Entity;
 
 /**
  * Component that controls the Abilify statuses for entities.
  */
 public class StatusComponent extends EntityComponent {
 	private int count = 0;
-	private HashMap<Integer, Integer> statuses;
+	private HashMap<UUID, Integer> statuses;
 	
 	@Override
 	public void onAttached() {
-		this.statuses = new HashMap<Integer, Integer>();
+		this.statuses = new HashMap<UUID, Integer>();
 	}
 	
 	@Override
@@ -34,8 +36,8 @@ public class StatusComponent extends EntityComponent {
 	public void onTick(float dt) {
 		Status s;
 		int d;
-		for (int i : statuses.keySet()) {
-			s = AbilifyPlugin.getManager().getStatus(i);
+		for (UUID i : statuses.keySet()) {
+			s = Abilify.getManager().getStatus(i);
 			d = statuses.get(i);
 			if (d == -1  && count == 9) {
 				useStatus(s);
@@ -54,36 +56,65 @@ public class StatusComponent extends EntityComponent {
 	}
 	
 	public boolean addStatus(Status s) {
-		if (statuses.put(s.getId(), s.getDuration()) == null)
-			return false;
-		return true;
+		return addStatus(s.getId());
+	}
+	
+	public boolean addStatus(UUID id) {
+		if (statuses.put(id, Abilify.getManager().getStatus(id).getDuration()) != null) {
+			save();
+			return true;
+		}
+		return false;	
 	}
 	
 	public boolean removeStatus(Status s) {
-		if (statuses.remove(s) == null)
-			return false;
-		return true;
+		return removeStatus(s.getId());
+	}
+	
+	public boolean removeStatus(UUID id) {
+		if (statuses.remove(id) != null) {
+			save();
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean hasStatus(Status s) {
-		return statuses.containsKey(s);
+		return hasStatus(s.getId());
+	}
+	
+	public boolean hasStatus(UUID id) {
+		return statuses.containsKey(id);
 	}
 	
 	public boolean useStatus(Status s) {
-		if (!hasStatus(s))
+		return useStatus(s.getId());
+	}
+	
+	public boolean useStatus(UUID id) {
+		if (!hasStatus(id))
 			return false;
 		else {
-			s.tick(this.getOwner());
+			Status s = Abilify.getManager().getStatus(id);
+			Entity e = this.getOwner();
+			StatusEvent event = new StatusEvent(s, e);
+			if (event.isCancelled())
+				return false;
+			s.main(this.getOwner());
 			return true;
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public void load() {
-		statuses = (HashMap<Integer, Integer>) getData().get("ABILIFY_STATUS");
+		statuses = (HashMap<UUID, Integer>) getData().get("ABILIFY_STATUS");
+		for (UUID i : statuses.keySet()) {
+			if (!Abilify.getManager().hasStatus(i))
+				removeStatus(i);
+		}
 	}
 
-	public void save(AbilifyDatabase database) {
+	public void save() {
 		getData().put("ABILIFY_STATUS", statuses);
 	}
 }

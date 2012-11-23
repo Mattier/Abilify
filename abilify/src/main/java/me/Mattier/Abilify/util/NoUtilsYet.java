@@ -1,5 +1,5 @@
 package me.Mattier.Abilify.util;
 
-public class TargetingUtils {
+public class NoUtilsYet {
 
 }

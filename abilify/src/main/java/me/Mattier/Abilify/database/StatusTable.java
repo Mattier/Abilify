@@ -1,5 +1,7 @@
 package me.Mattier.Abilify.database;
 
+import java.util.UUID;
+
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
 import com.alta189.simplesave.Table;
@@ -8,6 +10,9 @@ import com.alta189.simplesave.Table;
 public class StatusTable implements WrapperTable {
 	@Id
 	public int id;
+	
+	@Field
+	public UUID uuid;
 	
 	@Field
 	public String mech;
@@ -48,6 +53,14 @@ public class StatusTable implements WrapperTable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getMech() {

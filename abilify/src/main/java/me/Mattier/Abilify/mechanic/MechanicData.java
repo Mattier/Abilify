@@ -7,12 +7,13 @@ import java.lang.annotation.Target;
 
 /**
  * An annotation to hold mechanical information about a {@link Mechanic}. This
- * includes its {@link MechanicType type} and the default modifier array for the mechanic.
+ * includes its {@link Type type} and the default modifier array for the mechanic.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MechanicData {
-	MechanicType type();
+	Type type();
+	SubType subtype() default SubType.NONE;
 	int[] mod();
 }
 

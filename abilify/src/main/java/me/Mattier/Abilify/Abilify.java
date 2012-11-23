@@ -9,7 +9,7 @@ import org.spout.api.UnsafeMethod;
 import org.spout.api.exception.ConfigurationException;
 import org.spout.api.plugin.CommonPlugin;
 
-public class AbilifyPlugin extends CommonPlugin {
+public class Abilify extends CommonPlugin {
 	private static Logger LOGGER;
 	private static AbilifyConfig CONFIG;
 	private static AbilifyManager MANAGER;

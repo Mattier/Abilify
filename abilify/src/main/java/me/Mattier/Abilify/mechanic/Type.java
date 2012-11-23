@@ -1,7 +1,7 @@
 package me.Mattier.Abilify.mechanic;
 
 /**
-* The type of {@link me.Mattier.Abilify.mechanic.Mechanic Mechanic}. 
+* The type of {@link me.Mattier.abilify.mechanic.Abilify.mechanic.Mechanic Mechanic}. 
 * There are two general mechanic types, 
 * {@link me.Mattier.Abilify.wrappers.ability.Ability Ability} and 
 * {@link me.Mattier.Abilify.wrappers.status.Status Status}, for which 
@@ -12,9 +12,15 @@ package me.Mattier.Abilify.mechanic;
 * {@link me.Mattier.Abilify.wrappers.status.Ticking Ticking} and 
 * {@link me.Mattier.Abilify.wrappers.status.Triggered Triggered}.
 */
-public enum MechanicType {
+public enum Type {
+	// Statuses
 	TICKING,
 	TRIGGERED,
+	
+	// Abilities
 	TARGETED,
-	UNTARGETED;
+	UNTARGETED,
+	
+	// System
+	SYSTEM;
 }
