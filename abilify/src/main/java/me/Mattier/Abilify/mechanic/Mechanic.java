@@ -1,6 +1,12 @@
 package me.Mattier.Abilify.mechanic;
 
+import java.io.Serializable;
+
 import me.Mattier.Abilify.event.AbilifyDamageEvent;
+import me.Mattier.Abilify.wrappers.Cost;
+import me.Mattier.Abilify.wrappers.Datatable;
+import me.Mattier.Abilify.wrappers.Default;
+import me.Mattier.Abilify.wrappers.Status;
 
 import org.spout.api.Spout;
 import org.spout.api.entity.Entity;
@@ -11,48 +17,65 @@ import org.spout.api.entity.Entity;
  * should be supplied in the {@link MechanicData} annotation.
  */
 public abstract class Mechanic {
+	private static final Datatable data = new Datatable();
+	{
+		addDefault(new Default<String>("name", "Name"));
+		addDefault(new Default<String>("description", "Description Text"));
+		addDefault(new Default<String>("announce", "Announcement Text"));
+		
+		if (getType() == Type.ABILITY) {
+			addDefault(new Default<Cost>("cost", null));
+		} else if (getType() == Type.STATUS_TICKING) {
+			addDefault(new Default<Integer>("duration", 20));
+			addDefault(new Default<Integer>("rate", 20));
+		} else if (getType() == Type.STATUS_TRIGGERED) {
+			addDefault(new Default<Integer>("duration", 20));
+			addDefault(new Default<Integer>("rate", -1));
+			addDefault(new Default<Status>("hidden", null));
+		}
+	}
+	
+	/**
+	 * Registers a new default with the Datatable.
+	 */
+	public <T extends Serializable> void addDefault(Default<T> def) {
+		data.addDefault(def);
+	}
+	
 /* Mechanic Data */
+	/**
+	 * @return The default {@link Datatable} for this mechanic.
+	 */
+	public Datatable getData() {
+		return data;
+	}
+	
 	/**
 	 * @return The {@link Type} of this mechanic.
 	 */
 	public Type getType() {
-		return this.getClass().getAnnotation(MechanicData.class).type();
+		return this.getClass().getAnnotation(Data.class).type();
 	}
 	
-	/**
-	 * @return The {@link SubType} of this mechanic.
-	 */
-	public SubType getSubType() {
-		return this.getClass().getAnnotation(MechanicData.class).subtype();
-	}
-	
-	/**
-	 * @return The default modifier array of this mechanic.
-	 */
-	public int[] getModifier() {
-		return this.getClass().getAnnotation(MechanicData.class).mod();
-	}
-
-/* Pack Data */
 	/**
 	 * @return The name of this mechanic.
 	 */
 	public String getName() {
-		return this.getClass().getAnnotation(PackageData.class).name();
+		return this.getClass().getAnnotation(Data.class).name();
 	}
 	
 	/**
 	 * @return The author of this mechanic.
 	 */
 	public String getAuthor() {
-		return this.getClass().getAnnotation(PackageData.class).author();
+		return this.getClass().getAnnotation(Data.class).author();
 	}
 	
 	/**
 	 * @return The name of the package which contains this mechanic.
 	 */
 	public String getPack() {
-		return this.getClass().getAnnotation(PackageData.class).pack();
+		return this.getClass().getAnnotation(Data.class).pack();
 	}
 	
 /* Other Methods */
@@ -61,14 +84,10 @@ public abstract class Mechanic {
 	 * 
 	 * @param owner The entity which owns this mechanic, ie. the caster of an ability mechanic, 
 	 * or the individual affected by a status mechanic.
-	 * @param modifier The modifier array for this mechanic, these values are used by a server
-	 * admin to customize a mechanic.
-	 * @param args Variable arguments depending on the abilities subtypes.
+	 * @param table The datatable of a mechanic wrapper.
 	 * @return The targets of a mechanic, or null if this mechanic is untargeted.
 	 */
-	public Entity[] main(Entity owner, int[] modifier, Object... args) {
-		return null;
-	}
+	public abstract void main(Entity owner, Datatable table);
 	
 	/**
 	 * Currently only used with triggered statuses. This checks if the mechanic will trigger, 

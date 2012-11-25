@@ -11,10 +11,11 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MechanicData {
+public @interface Data {
 	Type type();
-	SubType subtype() default SubType.NONE;
-	int[] mod();
+	String name();
+	String author();
+	String pack();
 }
 
 

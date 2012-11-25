@@ -2,16 +2,12 @@ package me.Mattier.Abilify;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
-import me.Mattier.Abilify.component.AbilifyComponent;
+import me.Mattier.Abilify.component.SimpleAbilifyComponent;
 import me.Mattier.Abilify.database.AbilifyDatabase;
-import me.Mattier.Abilify.database.DatabaseUtil;
+import me.Mattier.Abilify.database.Database;
+import me.Mattier.Abilify.mechanic.Data;
 import me.Mattier.Abilify.mechanic.Mechanic;
-import me.Mattier.Abilify.mechanic.PackageData;
-import me.Mattier.Abilify.wrappers.ability.Ability;
-import me.Mattier.Abilify.wrappers.status.Status;
 
 import org.spout.api.Spout;
 import org.spout.api.entity.Entity;
@@ -25,15 +21,11 @@ public class AbilifyManager implements MechanicManager {
 	private final File packloc;
 	private final AbilifyDatabase database;
 	private final ArrayList<Mechanic> mechanics;
-	private final HashMap<UUID, Ability> abilities;
-	private final HashMap<UUID, Status> statuses;
 	
 	public AbilifyManager(File file) {
 		this.packloc = new File(file + File.separator + "packs");
 		this.database = new AbilifyDatabase(new File(file + File.separator + "db"));
 		this.mechanics = new ArrayList<Mechanic>();
-		this.abilities = new HashMap<UUID, Ability>();
-		this.statuses = new HashMap<UUID, Status>();
 	}
 	
 	/**
@@ -45,7 +37,6 @@ public class AbilifyManager implements MechanicManager {
 		Abilify.info("Starting Mechanic Manager...");
 		database.onEnable();
 		loadMechanics();
-		loadWrappers();
 		Abilify.info("...Mechanic Manager started!");
 	}
 
@@ -55,8 +46,6 @@ public class AbilifyManager implements MechanicManager {
 	 */
 	public void onDisable() {
 		Abilify.info("Stopping Mechanic Manager...");
-		abilities.clear();
-		statuses.clear();
 		mechanics.clear();
 		database.onDisable();
 		Abilify.info("...Mechanic Manager stopped!");
@@ -66,11 +55,8 @@ public class AbilifyManager implements MechanicManager {
 	 * Reloads the manager.
 	 */
 	public void onReload() {
-		abilities.clear();
-		statuses.clear();
 		mechanics.clear();
 		loadMechanics();
-		loadWrappers();
 	}
 
 	/**
@@ -83,35 +69,32 @@ public class AbilifyManager implements MechanicManager {
 		Spout.getPluginManager().loadPlugins(packloc);
 	}
 	
-	/**
-	 * Loads all of the Ability and Status wrappers from the database.
-	 */
-	public void loadWrappers() {
-		abilities.putAll(DatabaseUtil.loadAbilitiesFrom(database.getDatabase()));
-		statuses.putAll(DatabaseUtil.loadStatusesFrom(database.getDatabase()));
+/* Database */
+	public Database getDatabase() {
+		return database;
 	}
 	
 /* Attaching/Detaching of Abilify Components. */
 	@Override
 	public void abilifyEntities(Entity[] entities) {
 		for (Entity e : entities)
-			e.add(AbilifyComponent.class);
+			e.add(SimpleAbilifyComponent.class);
 	}
 	
 	@Override
 	public void abilifyEntity(Entity e) {
-		e.add(AbilifyComponent.class);
+		e.add(SimpleAbilifyComponent.class);
 	}
 	
 	@Override
 	public void debilifyEntities(Entity[] entities) {
 		for (Entity e : entities)
-			e.detach(AbilifyComponent.class);
+			e.detach(SimpleAbilifyComponent.class);
 	}
 	
 	@Override
 	public void debilifyEntity(Entity e) {
-		e.detach(AbilifyComponent.class);
+		e.detach(SimpleAbilifyComponent.class);
 	}
 	
 /* Mechanic Methods. */
@@ -120,9 +103,14 @@ public class AbilifyManager implements MechanicManager {
 		try {
 			mechanics.add(mechanic.newInstance());
 		} catch (Exception e) {
-			Abilify.warning("Error loading " + mechanic.getAnnotation(PackageData.class).name() 
-					+ " Mechanic, in Pack " + mechanic.getAnnotation(PackageData.class).pack() + ".");
+			Abilify.warning("Error loading " + mechanic.getAnnotation(Data.class).name() 
+					+ " Mechanic, in Pack " + mechanic.getAnnotation(Data.class).pack() + ".");
 		}
+	}
+	
+	@Override
+	public ArrayList<Mechanic> getMechanics() {
+		return mechanics;
 	}
 	
 	@Override
@@ -136,11 +124,6 @@ public class AbilifyManager implements MechanicManager {
 	}
 	
 	@Override
-	public ArrayList<Mechanic> getMechanics() {
-		return mechanics;
-	}
-	
-	@Override
 	public boolean hasMechanic(String name) {
 		try {
 			return mechanics.contains(Class.forName(name));
@@ -148,56 +131,5 @@ public class AbilifyManager implements MechanicManager {
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-/* Mechanic Wrapper Methods. */
-	@Override
-	public boolean registerAbility(Ability ability) {
-		return abilities.put(ability.getId(), ability) == null ? false : true;
-	}
-	
-	@Override
-	public boolean registerStatus(Status status) {
-		return statuses.put(status.getId(), status) == null ? false : true;
-	}
-	
-	@Override
-	public HashMap<UUID, Ability> getAbilities() {
-		return abilities;
-	}
-	
-	@Override
-	public HashMap<UUID, Status> getStatuses() {
-		return statuses;
-	}
-	
-	@Override
-	public Ability getAbility(UUID id) {
-		return abilities.get(id);
-	}
-	
-	@Override
-	public Status getStatus(UUID id) {
-		return statuses.get(id);
-	}
-	
-	@Override
-	public boolean hasAbility(Ability ability) {
-		return hasAbility(ability.getId());
-	}
-	
-	@Override
-	public boolean hasAbility(UUID id) {
-		return abilities.containsKey(id);
-	}
-	
-	@Override
-	public boolean hasStatus(Status status) {
-		return hasStatus(status.getId());
-	}
-	
-	@Override
-	public boolean hasStatus(UUID id) {
-		return statuses.containsKey(id);
 	}
 }

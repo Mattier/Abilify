@@ -1,16 +1,13 @@
 package me.Mattier.Abilify;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Mechanic;
-import me.Mattier.Abilify.wrappers.ability.Ability;
-import me.Mattier.Abilify.wrappers.status.Status;
 
 import org.spout.api.entity.Entity;
 
 public interface MechanicManager {
+
 /* Attaching/Detaching of Abilify Components. */
 	/**
 	 * Attach abilify components to the selected entities.
@@ -59,63 +56,4 @@ public interface MechanicManager {
 	 * @return true If the specified mechanic has been loaded by the manager.
 	 */
 	public boolean hasMechanic(String name);
-
-/* Mechanic Wrapper Methods. */
-	/**
-	 * Registers an {@link Ability} with the manager.
-	 * 
-	 * @param ability The ability to register.
-	 * @return true (as specified by {@link ArrayList#add})
-	 */
-	public boolean registerAbility(Ability ability);
-	
-	/**
-	 * Registers an {@link Status} with the manager.
-	 * 
-	 * @param ability The ability to register.
-	 * @return true (as specified by {@link ArrayList#add})
-	 */
-	public boolean registerStatus(Status status);
-	
-	/**
-	 * @return An {@link ArrayList} of all of the registered {@link Ability abilities},
-	 * and their associated IDs.
-	 */
-	public HashMap<UUID, Ability> getAbilities();
-	
-	/**
-	 * @return An {@link ArrayList} of all of the registered {@link Status statuses},
-	 * and their associated IDs.
-	 */
-	public HashMap<UUID, Status> getStatuses();
-	
-	/**
-	 * @return The {@link Ability} with the associated ID.
-	 */
-	public Ability getAbility(UUID id);
-	
-	/**
-	 * @return The {@link Status} with the associated ID.
-	 */
-	public Status getStatus(UUID id);
-	
-	/**
-	 * @return true if the specified ability is registered with the manager.
-	 */
-	public boolean hasAbility(Ability ability);
-	
-	/**
-	 * @return true if an ability with the specified id is registered with the manager.
-	 */
-	public boolean hasAbility(UUID id);
-	
-	/**
-	 * @return true if the specified status is registered with the manager.
-	 */
-	public boolean hasStatus(Status status);
-	
-	/**
-	 * @return true if the specified status is registered with the manager.
-	 */
-	public boolean hasStatus(UUID id);
 }

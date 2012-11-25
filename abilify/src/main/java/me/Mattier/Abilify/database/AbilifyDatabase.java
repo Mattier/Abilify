@@ -1,23 +1,23 @@
 package me.Mattier.Abilify.database;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.UUID;
 
-import com.alta189.simplesave.Database;
+import me.Mattier.Abilify.mechanic.Type;
+import me.Mattier.Abilify.wrappers.MechanicWrapper;
+
 import com.alta189.simplesave.DatabaseFactory;
 import com.alta189.simplesave.exceptions.ConnectionException;
 import com.alta189.simplesave.exceptions.TableRegistrationException;
 import com.alta189.simplesave.h2.H2Configuration;
 
-public class AbilifyDatabase {
+public class AbilifyDatabase implements Database {
 	private final File dbloc;
-	private Database db;
+	private com.alta189.simplesave.Database db;
 	
 	public AbilifyDatabase(File dbloc) {
 		this.dbloc = dbloc;
-	}
-	
-	public Database getDatabase() {
-		return db;
 	}
 	
 	public void onEnable() {
@@ -27,8 +27,7 @@ public class AbilifyDatabase {
 		db = DatabaseFactory.createNewDatabase(h2);
 		
 		try {
-			db.registerTable(AbilityTable.class);
-			db.registerTable(StatusTable.class);
+			db.registerTable(WrapperTable.class);
 		} catch (TableRegistrationException e) {
 			e.printStackTrace();
 		}
@@ -46,5 +45,21 @@ public class AbilifyDatabase {
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
+	}
+	
+/* Database API */
+	@Override
+	public void saveWrapper(MechanicWrapper wrapper) {
+		DatabaseUtil.saveWrapper(db, wrapper);
+	}
+	
+	@Override
+	public MechanicWrapper getWrapper(UUID id) {
+		return DatabaseUtil.findWrapper(db, id);
+	}
+	
+	@Override
+	public HashMap<UUID, MechanicWrapper> getWrappers(Type type) {
+		return DatabaseUtil.findWrappers(db, type);
 	}
 }

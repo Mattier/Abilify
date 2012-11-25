@@ -1,6 +1,7 @@
 package me.Mattier.Abilify.event;
 
-import me.Mattier.Abilify.wrappers.ability.Ability;
+import me.Mattier.Abilify.wrappers.Ability;
+import me.Mattier.Abilify.wrappers.Cost;
 
 import org.spout.api.entity.Entity;
 import org.spout.api.event.Cancellable;
@@ -12,10 +13,12 @@ public class AbilityEvent extends Event implements Cancellable {
 	private boolean c = false;
 	private final Ability a;
 	private final Entity e;
+	private Cost cost;
 
 	public AbilityEvent(Ability a, Entity e) {
 		this.a = a;
 		this.e = e;
+		this.cost = a.getData().get("cost", Cost.class);
 	}
 	
 	public Ability getAbility() {
@@ -24,6 +27,14 @@ public class AbilityEvent extends Event implements Cancellable {
 	
 	public Entity getOwner() {
 		return e;
+	}
+	
+	public Cost getCost() {
+		return cost;
+	}
+	
+	public void setCost(Cost cost) {
+		this.cost = cost;
 	}
 
 	@Override

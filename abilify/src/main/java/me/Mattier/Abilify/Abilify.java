@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.Mattier.Abilify.configuration.AbilifyConfig;
+import me.Mattier.Abilify.database.Database;
 
 import org.spout.api.UnsafeMethod;
 import org.spout.api.exception.ConfigurationException;
@@ -54,8 +55,14 @@ public class Abilify extends CommonPlugin {
 	}
 	
 	/**
-	 * @return The {@link me.Mattier.Abilify.configuration.AbilifyConfig config}
-	 * for this plugin.
+	 * @return The {@link Database} for this plugin.
+	 */
+	public static Database getDatabase() {
+		return MANAGER.getDatabase();
+	}
+	
+	/**
+	 * @return The {@link AbilifyConfig config} for this plugin.
 	 */
 	public static AbilifyConfig getConfig() {
 		return CONFIG;

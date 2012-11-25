@@ -1,20 +1,25 @@
 package me.Mattier.Abilify.Test;
 
-import me.Mattier.Abilify.mechanic.Main;
+import me.Mattier.Abilify.mechanic.Data;
 import me.Mattier.Abilify.mechanic.Mechanic;
-import me.Mattier.Abilify.mechanic.MechanicData;
-import me.Mattier.Abilify.mechanic.PackageData;
 import me.Mattier.Abilify.mechanic.Type;
+import me.Mattier.Abilify.wrappers.Ability;
+import me.Mattier.Abilify.wrappers.Datatable;
+import me.Mattier.Abilify.wrappers.Default;
+import me.Mattier.Abilify.wrappers.Status;
 
 import org.spout.api.entity.Entity;
 
-@PackageData(name = "TestAbility", author = "Mattier", pack = "TestPack")
-@MechanicData(type = Type.TARGETED, mod = {0, 1, 2, 3, 4, 5})
+@Data(type = Type.ABILITY, name = "TestAbility", author = "Mattier", pack = "TestPack")
 public class TestAbility extends Mechanic {
-	
-	@Override @Main
-	public Entity[] main(Entity owner, int[] modifier, Object... args) {
-		return null;
+	{
+		addDefault(new Default<String>("Random", "Name"));
+		addDefault(new Default<Status>("Status Applied", null));
+		addDefault(new Default<Ability>("Ability Chained", null));
 	}
 	
+	@Override
+	public void main(Entity owner, Datatable data) {
+		// Do stuff!
+	}
 }
