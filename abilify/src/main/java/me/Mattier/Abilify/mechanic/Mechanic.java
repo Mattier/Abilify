@@ -3,10 +3,10 @@ package me.Mattier.Abilify.mechanic;
 import java.io.Serializable;
 
 import me.Mattier.Abilify.event.AbilifyDamageEvent;
-import me.Mattier.Abilify.wrappers.Cost;
-import me.Mattier.Abilify.wrappers.Datatable;
-import me.Mattier.Abilify.wrappers.Default;
-import me.Mattier.Abilify.wrappers.Status;
+import me.Mattier.Abilify.wrapper.data.Datatable;
+import me.Mattier.Abilify.wrapper.data.Default;
+import me.Mattier.Abilify.wrapper.type.Cost;
+import me.Mattier.Abilify.wrapper.type.Status;
 
 import org.spout.api.Spout;
 import org.spout.api.entity.Entity;
@@ -16,8 +16,10 @@ import org.spout.api.entity.Entity;
  * in the {@link PackageData} annotation, and mechanical information about the mechanic
  * should be supplied in the {@link MechanicData} annotation.
  */
-public abstract class Mechanic {
+public abstract class Mechanic implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static final Datatable data = new Datatable();
+	
 	{
 		addDefault(new Default<String>("name", "Name"));
 		addDefault(new Default<String>("description", "Description Text"));
@@ -38,7 +40,7 @@ public abstract class Mechanic {
 	/**
 	 * Registers a new default with the Datatable.
 	 */
-	public <T extends Serializable> void addDefault(Default<T> def) {
+	protected final <T extends Serializable> void addDefault(Default<T> def) {
 		data.addDefault(def);
 	}
 	
@@ -46,35 +48,35 @@ public abstract class Mechanic {
 	/**
 	 * @return The default {@link Datatable} for this mechanic.
 	 */
-	public Datatable getData() {
-		return data;
+	public final Datatable getData() {
+		return data.copy();
 	}
 	
 	/**
 	 * @return The {@link Type} of this mechanic.
 	 */
-	public Type getType() {
+	public final Type getType() {
 		return this.getClass().getAnnotation(Data.class).type();
 	}
 	
 	/**
 	 * @return The name of this mechanic.
 	 */
-	public String getName() {
+	public final String getName() {
 		return this.getClass().getAnnotation(Data.class).name();
 	}
 	
 	/**
 	 * @return The author of this mechanic.
 	 */
-	public String getAuthor() {
+	public final String getAuthor() {
 		return this.getClass().getAnnotation(Data.class).author();
 	}
 	
 	/**
 	 * @return The name of the package which contains this mechanic.
 	 */
-	public String getPack() {
+	public final String getPack() {
 		return this.getClass().getAnnotation(Data.class).pack();
 	}
 	
@@ -111,7 +113,7 @@ public abstract class Mechanic {
 	 * @param damage The amount of damage to be applied.
 	 * @param target The entity being damaged.
 	 */
-	public void damage(int damage, Entity target) {
+	protected final void damage(int damage, Entity target) {
 		damage(damage, target, null);
 	}
 	
@@ -126,7 +128,7 @@ public abstract class Mechanic {
 	 * @param target The entity being damaged.
 	 * @param source The entity which is the source of the damage.
 	 */
-	public void damage(int damage, Entity target, Entity source) {
+	protected final void damage(int damage, Entity target, Entity source) {
 		AbilifyDamageEvent event = new AbilifyDamageEvent(damage, target, source);
 		Spout.getEventManager().callEvent(event);
 	}

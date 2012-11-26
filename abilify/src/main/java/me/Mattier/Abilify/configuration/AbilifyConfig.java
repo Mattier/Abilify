@@ -11,7 +11,7 @@ import org.spout.api.util.config.yaml.YamlConfiguration;
  * @see {@link org.spout.api.util.config.ConfigurationHolderConfiguration ConfigurationHolderConfiguration}
  */
 public class AbilifyConfig extends ConfigurationHolderConfiguration {
-	public static final ConfigurationHolder DAMAGE_HANDLER = new ConfigurationHolder("damage_handler", "Abilify");
+	public static final ConfigurationHolder DAMAGE_HANDLER = new ConfigurationHolder("Abilify", "damage_handler");
 	
 	public AbilifyConfig(File dataFolder) {
 		super(new YamlConfiguration(new File(dataFolder, "config.yml")));

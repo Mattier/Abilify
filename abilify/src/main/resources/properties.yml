@@ -1,7 +1,7 @@
 name: ${project.name}
 version: ${releaseVersion} b${buildNumber}
 description: ${project.description}
-author: ${project.developers.developer.name}
+author: ${project.organization.name}
 website: ${project.url}
 
 main: ${mainClass}

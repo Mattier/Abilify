@@ -1,6 +1,6 @@
 package me.Mattier.Abilify.event;
 
-import me.Mattier.Abilify.wrappers.Status;
+import me.Mattier.Abilify.wrapper.type.Status;
 
 import org.spout.api.entity.Entity;
 import org.spout.api.event.Cancellable;

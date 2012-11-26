@@ -8,23 +8,21 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<url>https://github.com/Mattier/Abilify</url>
 	<inceptionYear>2012</inceptionYear>
-	<description>The SpoutAPI, component-based, Ability/Status API and management system.</description>
-	
-	<developers>
-		<developer>
-			<id>Mattier</id>
-			<name>Charlotte Mattier</name>
-			<email>halfbloodpokemon@gmail.com</email>
-		</developer>
-	</developers>
+	<description>The RPG mechanic, content management system for Spout.</description>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mainClass>me.Mattier.Abilify.AbilifyPlugin</mainClass>
+		<mainClass>me.Mattier.Abilify.Abilify</mainClass>
 		<spoutpluginVersion>dev-SNAPSHOT</spoutpluginVersion>
 		<spoutVersion>dev-SNAPSHOT</spoutVersion>
 		<buildNumber>0</buildNumber>
 	</properties>
+	
+	<!-- Organization -->
+	<organization>
+		<name>Mattier Studios</name>
+		<url>http://halfbloodpokemon.wix.com/mattier-studios</url>
+	</organization>
 
 	<!-- License -->
 	<licenses>
@@ -219,6 +217,28 @@
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
+			<!-- Maven shade plugin -->
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-shade-plugin</artifactId>
+        		<version>2.0</version>
+        		<configuration>
+         			<artifactSet>
+                		<excludes>
+                  			<exclude>junit:junit</exclude>
+                  			<exclude>org.spout:spoutapi</exclude>
+               	 		</excludes>
+              		</artifactSet>
+        		</configuration>
+        		<executions>
+          			<execution>
+            			<phase>package</phase>
+            		<goals>
+              			<goal>shade</goal>
+            		</goals>
+          		</execution>
+        		</executions>
+      		</plugin>
 		</plugins>
 
 		<!-- Plugin management -->

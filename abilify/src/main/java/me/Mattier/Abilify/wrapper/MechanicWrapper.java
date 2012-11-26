@@ -1,10 +1,11 @@
-package me.Mattier.Abilify.wrappers;
+package me.Mattier.Abilify.wrapper;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Mechanic;
 import me.Mattier.Abilify.mechanic.Type;
+import me.Mattier.Abilify.wrapper.data.Datatable;
 
 import org.spout.api.entity.Entity;
 

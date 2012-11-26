@@ -1,4 +1,4 @@
-package me.Mattier.Abilify.wrappers;
+package me.Mattier.Abilify.wrapper.data;
 
 import java.io.Serializable;
 

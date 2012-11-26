@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Type;
-import me.Mattier.Abilify.wrappers.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.MechanicWrapper;
 
 import com.alta189.simplesave.Database;
 
@@ -12,7 +12,9 @@ public class DatabaseUtil {
 	
 /* Wrapper Methods */
 	public static void saveWrapper(Database db, MechanicWrapper mw) {
-		saveWrapperTable(db, new WrapperTable(mw));
+		WrapperTable wt = new WrapperTable();
+		wt.setWrapper(mw);
+		saveWrapperTable(db, wt);
 	}
 	
 	public static MechanicWrapper findWrapper(Database db, UUID id) {

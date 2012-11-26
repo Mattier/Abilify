@@ -1,7 +1,7 @@
 package me.Mattier.Abilify.event;
 
-import me.Mattier.Abilify.wrappers.Ability;
-import me.Mattier.Abilify.wrappers.Cost;
+import me.Mattier.Abilify.wrapper.type.Ability;
+import me.Mattier.Abilify.wrapper.type.Cost;
 
 import org.spout.api.entity.Entity;
 import org.spout.api.event.Cancellable;

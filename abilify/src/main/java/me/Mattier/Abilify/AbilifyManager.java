@@ -35,6 +35,8 @@ public class AbilifyManager implements MechanicManager {
 	 */
 	public void onEnable() {
 		Abilify.info("Starting Mechanic Manager...");
+		if (!packloc.exists())
+			packloc.mkdir();
 		database.onEnable();
 		loadMechanics();
 		Abilify.info("...Mechanic Manager started!");
@@ -66,7 +68,8 @@ public class AbilifyManager implements MechanicManager {
 	 * 'mechanics' ArrayList.
 	 */
 	public void loadMechanics() {
-		Spout.getPluginManager().loadPlugins(packloc);
+		if (packloc.isDirectory() && packloc.list().length > 0)
+			Spout.getPluginManager().loadPlugins(packloc);
 	}
 	
 /* Database */

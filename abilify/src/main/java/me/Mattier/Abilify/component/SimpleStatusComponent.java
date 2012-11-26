@@ -7,8 +7,8 @@ import me.Mattier.Abilify.Abilify;
 import me.Mattier.Abilify.event.StatusEvent;
 import me.Mattier.Abilify.exceptions.WrongMechanicTypeException;
 import me.Mattier.Abilify.mechanic.Type;
-import me.Mattier.Abilify.wrappers.MechanicWrapper;
-import me.Mattier.Abilify.wrappers.Status;
+import me.Mattier.Abilify.wrapper.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.type.Status;
 
 import org.spout.api.component.components.EntityComponent;
 

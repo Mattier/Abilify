@@ -1,9 +1,13 @@
-package me.Mattier.Abilify.wrappers;
+package me.Mattier.Abilify.wrapper;
 
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Mechanic;
 import me.Mattier.Abilify.mechanic.Type;
+import me.Mattier.Abilify.wrapper.data.Datatable;
+import me.Mattier.Abilify.wrapper.type.Ability;
+import me.Mattier.Abilify.wrapper.type.Cost;
+import me.Mattier.Abilify.wrapper.type.Status;
 
 import org.spout.api.entity.Entity;
 
@@ -24,20 +28,23 @@ public class SimpleMechanicWrapper implements Ability, Status, Cost {
 		this.data = m.getData();
 	}
 	
-	public UUID getId() {
+	@Override
+	public final UUID getId() {
 		return id;
 	}
 	
-	public Mechanic getMechanic() {
+	@Override
+	public final Mechanic getMechanic() {
 		return mech;
 	}
 	
-	public Datatable getData() {
+	@Override
+	public final Datatable getData() {
 		return data;
 	}
 
 	@Override
-	public Type getType() {
+	public final Type getType() {
 		return mech.getType();
 	}
 
@@ -45,32 +52,4 @@ public class SimpleMechanicWrapper implements Ability, Status, Cost {
 	public void main(Entity owner) {
 		mech.main(owner, data);
 	}
-	
-	
-	
-	/*
-	public String getName() {
-		return getData().get("name", String.class);
-	}
-	
-	public String getDescription() {
-		return getData().get("description", String.class);
-	}
-	
-	public String getAnnounce() {
-		return getData().get("announce", String.class);
-	}
-	
-	public void setName(String name) {
-		getData().put("name", name);
-	}
-	
-	public void setDescription(String description) {
-		getData().put("descrsiption", description);
-	}
-	
-	public void setAnnounce(String announce) {
-		getData().put("announce", announce);
-	}
-	*/
 }

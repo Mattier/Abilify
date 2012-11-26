@@ -1,4 +1,4 @@
-package me.Mattier.Abilify.wrappers;
+package me.Mattier.Abilify.wrapper.data;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -38,6 +38,10 @@ public final class Datatable implements SerializableMap {
 	
 	public <T extends Serializable> Serializable addDefault(Default<T> key) {
 		return dataMap.put(key.getKeyString(), key.getDefaultValue());
+	}
+	
+	public Datatable copy() {
+		return new Datatable((ManagedHashMap) deepCopy());
 	}
 
 	@Override

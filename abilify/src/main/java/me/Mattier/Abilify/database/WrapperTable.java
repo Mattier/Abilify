@@ -3,7 +3,7 @@ package me.Mattier.Abilify.database;
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Type;
-import me.Mattier.Abilify.wrappers.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.MechanicWrapper;
 
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
@@ -26,12 +26,14 @@ public class WrapperTable {
 	@Field
 	private String name;
 	
+	/*
 	public WrapperTable(MechanicWrapper wrapper) {
 		this.uuid = wrapper.getId();
 		this.wrapper = wrapper;
 		this.type = wrapper.getType();
 		this.name = wrapper.getData().get("name", String.class);
 	}
+	*/
 
 	public int getId() {
 		return id;

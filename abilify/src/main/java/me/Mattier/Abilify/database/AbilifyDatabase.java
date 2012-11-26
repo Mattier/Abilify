@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Type;
-import me.Mattier.Abilify.wrappers.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.MechanicWrapper;
 
 import com.alta189.simplesave.DatabaseFactory;
 import com.alta189.simplesave.exceptions.ConnectionException;
@@ -18,6 +18,8 @@ public class AbilifyDatabase implements Database {
 	
 	public AbilifyDatabase(File dbloc) {
 		this.dbloc = dbloc;
+		if (!dbloc.exists())
+			dbloc.mkdir();
 	}
 	
 	public void onEnable() {
@@ -31,7 +33,7 @@ public class AbilifyDatabase implements Database {
 		} catch (TableRegistrationException e) {
 			e.printStackTrace();
 		}
-
+		
 		try {
 			db.connect();
 		} catch (ConnectionException e) {

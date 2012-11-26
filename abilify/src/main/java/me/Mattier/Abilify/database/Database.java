@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import me.Mattier.Abilify.mechanic.Type;
-import me.Mattier.Abilify.wrappers.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.MechanicWrapper;
+import me.Mattier.Abilify.wrapper.type.Ability;
 
 public interface Database {
 /* Database Saving */
